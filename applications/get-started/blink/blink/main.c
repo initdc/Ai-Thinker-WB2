@@ -5,18 +5,31 @@
 #include <task.h>
 #include <bl_gpio.h>
 
-#define GPIO_LED_PIN 3
+#define RED_LED_PIN 14
+#define GREEN_LED_PIN 17
+#define BLUE_LED_PIN 3
+
+#define DELAY 500
+
+void enable_pin(uint8_t pin)
+{
+    bl_gpio_output_set(pin, 1);
+    vTaskDelay(DELAY);
+    bl_gpio_output_set(pin, 0);
+    vTaskDelay(DELAY);
+}
 
 void blink_test(void *param)
 {
-    uint8_t value = 1;
+    bl_gpio_enable_output(RED_LED_PIN, 0, 0);
+    bl_gpio_enable_output(GREEN_LED_PIN, 0, 0);
+    bl_gpio_enable_output(BLUE_LED_PIN, 0, 0);
+
     while (1)
     {
-        bl_gpio_enable_output(GPIO_LED_PIN, 0, 0);
-        printf("Turning the LED %s! \r\n", value == 1 ? "ON" : "OFF");
-        bl_gpio_output_set(GPIO_LED_PIN, value);
-        value = !value;
-        vTaskDelay(1000);
+        enable_pin(RED_LED_PIN);
+        enable_pin(GREEN_LED_PIN);
+        enable_pin(BLUE_LED_PIN);     
     }
 }
 
